@@ -60,6 +60,10 @@
   .main{
     width:90%;
   }
+  .todo-wrapper {
+    min-width: 15%;
+    max-width: 70%;
+  }
 }
 .count {
   align-self: stretch;

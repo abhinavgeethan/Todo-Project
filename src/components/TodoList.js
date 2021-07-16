@@ -1,6 +1,7 @@
 import React from "react";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
+import {SignUpForm} from "./SignUpForm";
 
 export default class TodoList extends React.Component{
     
@@ -8,7 +9,8 @@ export default class TodoList extends React.Component{
         super(props);
         this.state={
             todos:[],
-            todosToShow:"All"
+            todosToShow:"All",
+            openModal:false
         };
     }
     
@@ -98,27 +100,28 @@ export default class TodoList extends React.Component{
         
         return(
             <div className="main">
-                <div className="count">ToDos Left : {todos.filter(todo=>!todo.complete).length}</div>
-                <div className="todo-wrapper">
-                    <div className="todo-view">{this.state.todosToShow}</div>
-                    <div className="todo-container">
-                        {(!empty)?todos.map(todo => (
-                            <Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo.id)} onDelete={()=>this.onDelete(todo.id,todo.text)}todo={todo}></Todo>
-                            )):<div>Nothing to see here.</div>}
+                    <div className="count">ToDos Left : {todos.filter(todo=>!todo.complete).length}</div>
+                    <div className="todo-wrapper">
+                        <div className="todo-view">{this.state.todosToShow}</div>
+                        <div className="todo-container">
+                            {(!empty)?todos.map(todo => (
+                                <Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo.id)} onDelete={()=>this.onDelete(todo.id,todo.text)}todo={todo}></Todo>
+                                )):<div>Nothing to see here.</div>}
+                        </div>
+                        {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null}
+                        <div className="sort-buttons">
+                            <button className="button" style={{backgroundColor:'var(--palette-1)'}} onClick={()=>this.updateTodosToShow("All")}>All</button>
+                            <button className="button" style={{backgroundColor:'var(--palette-3)'}} onClick={()=>this.updateTodosToShow("Active")}>Active</button>
+                            <button className="button" style={{backgroundColor:'var(--palette-2)'}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button>
+                        </div>
+                        <div className="adder">
+                            {/* <span className="material-icons-outlined adder-text">add_circle</span> */}
+                            <TodoForm onSubmit={this.addTodo}></TodoForm>
+                        </div>
                     </div>
-                    {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null}
-                    <div className="sort-buttons">
-                        <button className="button" style={{backgroundColor:'var(--palette-1)'}} onClick={()=>this.updateTodosToShow("All")}>All</button>
-                        <button className="button" style={{backgroundColor:'var(--palette-3)'}} onClick={()=>this.updateTodosToShow("Active")}>Active</button>
-                        <button className="button" style={{backgroundColor:'var(--palette-2)'}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button>
-                    </div>
-                    <div className="adder">
-                        {/* <span className="material-icons-outlined adder-text">add_circle</span> */}
-                        <TodoForm onSubmit={this.addTodo}></TodoForm>
-                    </div>
+                    <button className="button" style={{backgroundColor:'var(--palette-2)',marginTop:'5px',marginBottom:'5px'}} onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>
+                    <SignUpForm></SignUpForm>
                 </div>
-                <button className="button" style={{backgroundColor:'var(--palette-2)',marginTop:'5px',marginBottom:'5px'}} onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>
-            </div>
             );
     }
 }
