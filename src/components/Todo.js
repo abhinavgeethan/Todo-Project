@@ -1,4 +1,5 @@
 import React from "react";
+import "./Todo.css";
 
 export default function Todo(props) {
     return(<div className="todo-item" style={{backgroundColor:props.todo.complete?'var(--palette-2)':'var(--palette-3)'}}>

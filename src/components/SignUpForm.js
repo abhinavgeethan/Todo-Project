@@ -4,25 +4,54 @@ import validate from "./ValidateInfo";
 import './ModalStyle.css';
 import './SignUpForm.css';
 
-export const SignUpForm=()=>{
-    const [open, setOpen] = useState(false);
-    const [isUser, setisUser] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+export const SignUpForm=(props)=>{
+    const [openLogin, setOpenLogin] = useState(props.openLogin);
+    const [openSignup, setOpenSignup] = useState(props.openSignup);
+    const [isUser, setisUser] = useState(props.openLogin);
+    // const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const onOpenModal = () => setOpen(true);
-    const onCloseModal = () => setOpen(false);
+    // const onOpenModal = () => setOpen(true);
+    const onCloseSignup = () => {setOpenSignup(false);};
+    const onCloseLogin = () => {setOpenLogin(false);};
 
-    const onLogin=()=>{};
-    const onSignUp=()=>{};
-    function submitForm() {
-      setIsSubmitted(true);
+    function signup_submitForm(values) {
+      // setIsSubmitted(true);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({"username": values.username,"password":values.password,"email":values.email,"name":values.name})
+      };
+      fetch('http://127.0.0.1:5000/signup', requestOptions)
+          .then(response=>response.json())
+          .then(data => {
+            console.log(data.signedup);
+            setisUser(data.signedup);
+          });
+    }
+
+    function login_submitForm(values) {
+      console.log("Yeah...");
+      console.log(values);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({"username": values.username,"password":values.password})
+      };
+      fetch('http://127.0.0.1:5000/login', requestOptions)
+          .then(response=>response.json())
+          .then(data => {
+            console.log(data.loggedIn);
+            setIsLoggedIn(data.loggedIn);
+            props.onLogin(data.loggedIn);
+          });
     }
 
     const FormSuccess = () => {
       return (
         <div className='form-content-right'>
           <h1 className='form-success'>We have received your request!</h1>
-          <img className='form-img-2' src='img/img-3.svg' alt='success-image' />
+          {/* <img className='form-img-2' src='img/img-3.svg' alt='success-image' /> */}
         </div>
       );
     };
@@ -30,6 +59,7 @@ export const SignUpForm=()=>{
     const useForm = (callback, validate) => {
       const [values, setValues] = useState({
         username: '',
+        name:'',
         email: '',
         password: '',
         password2: ''
@@ -55,10 +85,48 @@ export const SignUpForm=()=>{
       useEffect(
         () => {
           if (Object.keys(errors).length === 0 && isSubmitting) {
-            callback();
+            callback(values);
           }
         },
         [errors]
+      );
+    
+      return { handleChange, handleSubmit, values, errors };
+    };
+
+    const useFormLogin = (callback, validate) => {
+      console.log("usedFormLogin");
+      const [values, setValues] = useState({
+        username: '',
+        password: '',
+      });
+      const [errors, setErrors] = useState({});
+      const [isSubmitting, setIsSubmitting] = useState(false);
+    
+      const handleChange = e => {
+        const { name, value } = e.target;
+        setValues({
+          ...values,
+          [name]: value
+        });
+      };
+    
+      const handleSubmit = e => {
+        e.preventDefault();
+        // console.log("prevented default login");
+        // setErrors(validate(values));
+        // console.log("Got here?");
+        setIsSubmitting(true);
+      };
+    
+      useEffect(
+        () => {
+          // console.log("Got till useEffect");
+          if (isSubmitting) {
+            console.log("Calling home");
+            callback(values);
+          }
+        }
       );
     
       return { handleChange, handleSubmit, values, errors };
@@ -74,8 +142,7 @@ export const SignUpForm=()=>{
         <div className='form-content-right'>
           <form onSubmit={handleSubmit} className='form' noValidate>
             <h1>
-              Get started with us today! Create your account by filling out the
-              information below.
+              Create your account by filling out the information below.
             </h1>
             <div className='form-inputs'>
               <label className='form-label'>Username</label>
@@ -88,6 +155,18 @@ export const SignUpForm=()=>{
                 onChange={handleChange}
               />
               {errors.username && <p>{errors.username}</p>}
+            </div>
+            <div className='form-inputs'>
+              <label className='form-label'>Name</label>
+              <input
+                className='form-input'
+                type='text'
+                name='name'
+                placeholder='Enter your name'
+                value={values.name}
+                onChange={handleChange}
+              />
+              {errors.name && <p>{errors.name}</p>}
             </div>
             <div className='form-inputs'>
               <label className='form-label'>Email</label>
@@ -125,7 +204,7 @@ export const SignUpForm=()=>{
               />
               {errors.password2 && <p>{errors.password2}</p>}
             </div>
-            <button className='form-input-btn' type='submit' onClick={onSignUp}>
+            <button className='form-input-btn' type='submit'>
               Sign up
             </button>
             <span className='form-input-login'>
@@ -137,7 +216,7 @@ export const SignUpForm=()=>{
     };
 
     const FormLogin = ({ submitForm }) => {
-      const { handleChange, handleSubmit, values, errors } = useForm(
+      const { handleChange, handleSubmit, values, errors } = useFormLogin(
         submitForm,
         validate
       );
@@ -172,7 +251,7 @@ export const SignUpForm=()=>{
               />
               {errors.password && <p>{errors.password}</p>}
             </div>
-            <button className='form-input-btn' type='submit' onClick={onLogin}>
+            <button className='form-input-btn' type='submit'>
               Log In
             </button>
             <span className='form-input-login'>
@@ -185,10 +264,15 @@ export const SignUpForm=()=>{
 
     return (
       <div>
-        <button className="button" onClick={onOpenModal}>Sign Up</button>
-        <Modal open={open} onClose={onCloseModal} center>
+        {/* <button className="button" onClick={onOpenModal}>Sign Up</button> */}
+        <Modal open={openSignup} onClose={onCloseSignup} center>
           <div className='form-container'>
-            {!isSubmitted && !isUser ? (<FormSignup submitForm={submitForm} />) : (!isSubmitted && isUser ? (<FormLogin submitForm={submitForm} />) : (<FormSuccess />))}
+            {!isUser ? (<FormSignup submitForm={signup_submitForm} />) : (isUser ? (<FormLogin submitForm={login_submitForm} />) : (<FormSuccess />))}
+          </div>
+        </Modal>
+        <Modal open={openLogin} onClose={onCloseLogin} center>
+          <div className='form-container'>
+            {(isUser ? (<FormLogin submitForm={login_submitForm} />) : (!isUser ? (<FormSignup submitForm={signup_submitForm} />) : (<FormSuccess />)))}
           </div>
         </Modal>
       </div>

@@ -12,6 +12,12 @@ README.md
 # production
 /build
 
+#pycache
+*.pyc
+
+#venv
+/backend/auth
+
 # misc
 .DS_Store
 .env.local
