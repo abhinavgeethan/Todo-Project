@@ -1,7 +1,6 @@
 import React from "react";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
-import {SignUpForm} from "./SignUpForm";
 
 export default class TodoList extends React.Component{
     
@@ -12,6 +11,8 @@ export default class TodoList extends React.Component{
             todosToShow:"All",
             openModal:false
         };
+        console.log("In ToDo");
+        console.log(props);
     }
     
     componentDidMount(){
@@ -120,7 +121,7 @@ export default class TodoList extends React.Component{
                         </div>
                     </div>
                     <button className="button" style={{backgroundColor:'var(--palette-2)',marginTop:'5px',marginBottom:'5px'}} onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>
-                    <SignUpForm></SignUpForm>
+                    <button className="button" style={{backgroundColor:'var(--palette-2)',marginTop:'5px',marginBottom:'5px'}} >Log Out</button>
                 </div>
             );
     }

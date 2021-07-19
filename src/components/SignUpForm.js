@@ -3,6 +3,7 @@ import Modal from "react-responsive-modal";
 import validate from "./ValidateInfo";
 import './ModalStyle.css';
 import './SignUpForm.css';
+import { Redirect } from "react-router-dom";
 
 export const SignUpForm=(props)=>{
     const [openLogin, setOpenLogin] = useState(props.openLogin);
@@ -14,6 +15,8 @@ export const SignUpForm=(props)=>{
     // const onOpenModal = () => setOpen(true);
     const onCloseSignup = () => {setOpenSignup(false);};
     const onCloseLogin = () => {setOpenLogin(false);};
+
+    console.log(props);
 
     function signup_submitForm(values) {
       // setIsSubmitted(true);
