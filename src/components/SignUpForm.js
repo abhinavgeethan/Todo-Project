@@ -4,6 +4,7 @@ import validate from "./ValidateInfo";
 import './ModalStyle.css';
 import './SignUpForm.css';
 import { Redirect } from "react-router-dom";
+import {login} from "../auth";
 
 export const SignUpForm=(props)=>{
     const [openLogin, setOpenLogin] = useState(props.openLogin);
@@ -45,8 +46,12 @@ export const SignUpForm=(props)=>{
           .then(response=>response.json())
           .then(data => {
             console.log(data.loggedIn);
-            setIsLoggedIn(data.loggedIn);
-            props.onLogin(data.loggedIn);
+            console.log(data);
+            if (data.loggedIn && data.access_token){
+              login({"access_token":data.access_token});
+              setIsLoggedIn(data.loggedIn);
+              props.onLogin(data.loggedIn);
+            }
           });
     }
 

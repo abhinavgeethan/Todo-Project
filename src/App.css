@@ -1,9 +1,9 @@
 :root {
-  --palette-1: #1a535c;
-  --palette-2: #4ecdc4;
-  --palette-3: #ff6b6b;
-  --palette-4: #ffe66d;
-  --palette-5: #f7fff7;
+  --palette-1: 26,83,92;
+  --palette-2: 78,205,196;
+  --palette-3: 255,107,107;
+  --palette-4: 255,230,109;
+  --palette-5: 247,255,247;
 }
 
 .App {
