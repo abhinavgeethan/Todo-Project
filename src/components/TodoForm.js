@@ -2,6 +2,7 @@ import React from "react";
 import shortid from "shortid";
 import Modal from "react-responsive-modal";
 import './ModalStyle.css';
+import './Todo.css';
 import DateTimePicker from 'react-datetime-picker';
 
 
@@ -52,7 +53,7 @@ export default class TodoForm extends React.Component{
     render(){
         return(
         <div>
-            <button className="button" onClick={()=>{this.setState({openModal:true})}}>Add Todo</button>
+            <button className="function-btn" onClick={()=>{this.setState({openModal:true})}}>Add Todo</button>
             <Modal open={this.state.openModal} onClose={()=>{this.setState({openModal:false})}} center>
                 <form className="todo-form"onSubmit={this.handleSubmit}>
                     <h2>Add Todo</h2>

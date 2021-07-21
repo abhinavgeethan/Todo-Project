@@ -79,10 +79,11 @@ def refresh():
 @flask_praetorian.auth_required
 def fetch_data():
     user_id=flask_praetorian.current_user().id
+    name=flask_praetorian.current_user().name
     data=[{"id":x.id, "user_id":x.user_id, "text":x.text, "datetime":x.datetime, "completed":x.completed} for x in Todos.query.filter_by(user_id=user_id).all()]
     if len(data)<1:
-        return {"data":[{"user_id":user_id}]}
-    return {"data":data}
+        return {"data":[{"user_id":user_id,"name":name}]}
+    return {"data":data,"name":name}
 
 @auth.route('/data/delete',methods=['POST'])
 @flask_praetorian.auth_required

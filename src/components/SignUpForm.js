@@ -35,7 +35,7 @@ export const SignUpForm=(props)=>{
     }
 
     function login_submitForm(values) {
-      console.log("Yeah...");
+      console.log("Login Sequence");
       console.log(values);
       const requestOptions = {
         method: 'POST',

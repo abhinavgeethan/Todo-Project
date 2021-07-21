@@ -13,6 +13,7 @@ export default class TodoList extends React.Component{
             view:"All",
             openModal:false,
             user_id:0,
+            name:"User",
             server_inactive:false
         };
         this.logoutHandler=(bool_val)=>{
@@ -35,7 +36,8 @@ export default class TodoList extends React.Component{
                     this.setState({
                         todos:new_todos,
                         todosToShow:"All",
-                        user_id:data.data[0].user_id
+                        user_id:data.data[0].user_id,
+                        name:data.name
                     });
                 }
             })
@@ -157,6 +159,18 @@ export default class TodoList extends React.Component{
         let tomorrow=new Date(today.getTime()+dayDuration);
         return ((datetime>today)&&(datetime<tomorrow))
     }
+    
+    isThisWeek=(datetime)=>{
+        let dayDuration=1000*60*60*24
+        let today=new Date();
+        today.setMilliseconds(0);
+        today.setSeconds(0);
+        today.setMinutes(0);
+        today.setHours(0);
+        let week_start=new Date(today.getTime()-(dayDuration*(7-datetime.getDay())));
+        let week_end=new Date(week_start.getTime()+(dayDuration*7));
+        return ((datetime>week_start)&&(datetime<week_end))
+    }
 
     isToday=(datetime)=>{
         let today=new Date();
@@ -172,42 +186,75 @@ export default class TodoList extends React.Component{
         
         let todos=[]
         let empty=false
-        if(this.state.todosToShow==="Complete"){
-            todos=this.state.todos.filter(todo=>todo.completed);
+        if(this.state.view==="Today"){
+            todos=this.state.todos.filter(todo=>this.isToday(todo.datetime));
             if (todos.length === 0){
                 empty=true
             }
-        }
-        else if (this.state.todosToShow==="Active"){
-            todos=this.state.todos.filter(todo=>!todo.completed);
+        }else if (this.state.view==="This Week"){
+            todos=this.state.todos.filter(todo=>this.isThisWeek(todo.datetime));
             if (todos.length === 0){
                 empty=true
             }
-        }
-        else{
+        }else{
             todos=this.state.todos;
             if (todos.length === 0){
                 empty=true
             }
         }
+        if(this.state.todosToShow==="Complete"){
+            todos=todos.filter(todo=>todo.completed);
+            if (todos.length === 0){
+                empty=true
+            }
+        }
+        else if (this.state.todosToShow==="Active"){
+            todos=todos.filter(todo=>!todo.completed);
+            if (todos.length === 0){
+                empty=true
+            }
+        }
+        else{
+            todos=todos;
+            if (todos.length === 0){
+                empty=true
+            }
+        }
         
+        var days=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         return(
             <div className="main">
-                    <div className="count">ToDos Left : {todos.filter(todo=>!todo.complete).length}</div>
+                <div className="content-title">Todo WebApp</div>
+                <div className="content-wrapper">
+                    <div className="count">Welcome {this.state.name},</div>
+                    {/* <div className="count">You have {(todos.filter(todo=>!todo.complete).length===0)?"no":todos.filter(todo=>!todo.complete).length} todos left.</div> */}
                     <div className="todo-wrapper">
                         {/* <div className="todo-view">{this.state.todosToShow}</div> */}
                         <div className="todo-view">{this.state.view}</div>
                         <div className="todo-container">
-                            {(!empty)?todos.map(todo => (
-                                <Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} todo={todo}></Todo>
-                                )):this.state.server_inactive?(<div>Could not connect to the server. Try refreshing.</div>):(<div>Nothing to see here.</div>)}
+                            {(!empty)?
+                            ((!(this.state.view==="This Week"))?
+                            todos.map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} todo={todo}></Todo>)):
+                            (
+                                <div className="week-view">
+                                    {days.map(day=>
+                                    (<div className="week-day-view">
+                                        <span className="week-day-title">{day}</span>
+                                        {/* <hr size="1px" width="90%" color="black"></hr> */}
+                                        {todos.filter(todo=>day===days[todo.datetime.getDay()]).length?todos.filter(todo=>day===days[todo.datetime.getDay()]).map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} todo={todo}></Todo>)):<span className="empty-weekday">You're free this day.</span>}
+                                    </div>))}
+                                </div>
+                                )):
+                                ((this.state.server_inactive)?
+                                (<div>Could not connect to the server. Try refreshing.</div>):
+                                (<div>Nothing to see here.</div>))}
                         </div>
                         {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null}
                         <div className="sort-buttons">
                             <span>View: </span>
                             <button className="button view-btn" style={{backgroundColor:this.state.view==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateView("All")}>All</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateView("Active")}>Today</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateView("Complete")}>This Week</button>
+                            <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateView("Today")}>Today</button>
+                            <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateView("This Week")}>This Week</button>
                         </div>
                         <div className="sort-buttons">
                             <span>See: </span>
@@ -216,15 +263,16 @@ export default class TodoList extends React.Component{
                             <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Complete"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button>
                         </div>
                         <div className="function-btns">
-                            <button className="button function-btn" onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>
-                            <button className="button function-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
+                            {/* <button className="button function-btn" onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button> */}
+                            <button className="function-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
+                            <div className="adder">
+                                {/* <span className="material-icons-outlined adder-text">add_circle</span> */}
+                                <TodoForm onSubmit={this.addTodo}></TodoForm>
+                            </div>
                         </div>
                     </div>
-                        <div className="adder">
-                            {/* <span className="material-icons-outlined adder-text">add_circle</span> */}
-                            <TodoForm onSubmit={this.addTodo}></TodoForm>
-                        </div>
                 </div>
+            </div>
             );
     }
 }
