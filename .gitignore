@@ -12,6 +12,12 @@ README.md
 # production
 /build
 
+#pycache
+*.pyc
+
+#venv
+/backend/auth
+
 # misc
 .DS_Store
 .env.local
@@ -22,3 +28,4 @@ README.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/.vscode
