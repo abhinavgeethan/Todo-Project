@@ -80,19 +80,22 @@ def refresh():
 def fetch_data():
     user_id=flask_praetorian.current_user().id
     data=[{"id":x.id, "user_id":x.user_id, "text":x.text, "datetime":x.datetime, "completed":x.completed} for x in Todos.query.filter_by(user_id=user_id).all()]
+    if len(data)<1:
+        return {"data":[{"user_id":user_id}]}
     return {"data":data}
 
 @auth.route('/data/delete',methods=['POST'])
 @flask_praetorian.auth_required
 def delete_todo():
-    user_id=flask_praetorian.current_user().id
+    cur_user_id=flask_praetorian.current_user().id
     data=request.get_json()
     todo_id=data['id']
+    user_id=data['user_id']
+    if cur_user_id!=user_id:
+        return {"error":"User id mismatch"},404
     todo=Todos.query.filter_by(id=todo_id,user_id=user_id).first()
     db.session.delete(todo)
     db.session.commit()
-    # todo_check=Todos.query.filter_by(id=todo_id,user_id=user_id).first()
-    # if not todo_check:
     return {"deleted":True}
 
 @auth.route('/data/add',methods=['POST'])
@@ -100,6 +103,7 @@ def delete_todo():
 def add_todo():
     cur_user_id=flask_praetorian.current_user().id
     data=request.get_json()
+    print(data)
     id=data['id']
     user_id=data['user_id']
     text=data['text']
