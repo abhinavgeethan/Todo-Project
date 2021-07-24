@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import "./homePage.css";
 import {SignUpForm} from './SignUpForm';
 import { Redirect } from "react-router-dom";
+import GHLogo from "../GitHub-Mark-120px-plus.png";
 
 export const HomePage=(props)=>{
     const [openLogin,setOpenLogin]=useState(false);
@@ -39,7 +40,9 @@ export const HomePage=(props)=>{
                         <button className="main-button"onClick={onOpenSignup}>Sign Up</button>
                     </div>
                     <div className="link-buttons">
-                        <button>Github</button>
+                        <button style={{border:"none", backgroundColor:"transparent",cursor:"pointer"}}onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}>
+                            <img src={GHLogo} width="60%"></img>
+                        </button>
                         <button>Netlify</button>
                     </div>
                 </div>

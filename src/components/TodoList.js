@@ -1,6 +1,8 @@
 import React from "react";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
+import howTo from './howTo';
+import "./burgerMenu.css";
 import {logout,authFetch} from "../auth/index.js";
 
 export default class TodoList extends React.Component{
@@ -10,15 +12,19 @@ export default class TodoList extends React.Component{
         this.state={
             todos:[],
             todosToShow:"All",
-            view:"All",
+            view:"Today",
             openModal:false,
             user_id:0,
             name:"User",
-            server_inactive:false
+            server_inactive:false,
+            processing:false,
+            openBurgerMenu:false
         };
         this.logoutHandler=(bool_val)=>{
             console.log("Logging Out.");
+            // this.setState({processing:true});
             logout();
+            // this.setState({processing:false});
             props.logoutHandler(bool_val);
         };
     }
@@ -51,6 +57,7 @@ export default class TodoList extends React.Component{
     }
 
     addTodo=(todo)=>{
+        this.setState({processing:true});
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,7 +76,7 @@ export default class TodoList extends React.Component{
                     }));
                 }
             })
-        // this.autoSave();
+        this.setState({processing:false});
     }
 
     toggleComplete=(todo)=>{
@@ -78,6 +85,7 @@ export default class TodoList extends React.Component{
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id,"completed":(!todo.completed)})
         };
+        this.setState({processing:true});
         authFetch("http://127.0.0.1:5000/data/update",requestOptions)
             .then(r=>r.json())
             .then(data=>{
@@ -97,26 +105,25 @@ export default class TodoList extends React.Component{
                     }));
                 }
             })
-        this.autoSave();
+        this.setState({processing:true});
     }
 
     updateTodosToShow=(s)=>{
         this.setState({
             todosToShow:s
         });
-        this.autoSave();
     }
     
     updateView=(s)=>{
         this.setState({
             view:s
         });
-        this.autoSave();
     }
 
     onDelete=(todo)=>{
         let resp=window.confirm("Deleting: \""+todo.text+"\".\nClick OK to confirm.");
         if (resp){
+            this.setState({processing:true});
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -132,21 +139,26 @@ export default class TodoList extends React.Component{
                         }));
                     }
                 })
-            this.autoSave();
+            this.setState({processing:false});
         }
     }
     
+    // Fix This
     deleteCompleted=()=>{
         this.setState(state => ({
             todos: state.todos.filter(todo => !todo.complete)
         }));
-        this.autoSave();
     }
 
     autoSave=()=>{
         if (this.state.todos){
             localStorage.setItem('state',JSON.stringify(this.state))
         }
+    }
+
+    isOverdue=(datetime)=>{
+        let now=new Date();
+        return (now>datetime)
     }
 
     isTomorrow=(datetime)=>{
@@ -183,7 +195,6 @@ export default class TodoList extends React.Component{
     }
 
     render(){
-        
         let todos=[]
         let empty=false
         if(this.state.view==="Today"){
@@ -220,58 +231,79 @@ export default class TodoList extends React.Component{
                 empty=true
             }
         }
+        todos.sort((a,b)=>b.datetime-a.datetime);
         
         var days=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         return(
             <div className="main">
-                <div className="content-title">Todo WebApp</div>
+                <div className={this.state.openBurgerMenu?"menu-wrapper isactive":"menu-wrapper isinactive"}>
+                    <div class="content-title burger-inner">Todo WebApp</div>
+                    <button className="function-btn burger-inner" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
+                    <button className="function-btn burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}>GitHub</button>
+                    <a href="githubreadmelink" className="burger-inner">Credits and Resources</a>
+                </div>
+                <div className="header">
+                    <div className="content-title">Todo WebApp</div>
+                    <div style={{display:"flex", alignItems:"center"}}>
+                        <button className="logout-btn" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}>GitHub</button>
+                        <button className="logout-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
+                    </div>
+                    <div class="hamburger" onClick={()=>{this.setState({openBurgerMenu:!this.state.openBurgerMenu})}}>
+                        <span class={this.state.openBurgerMenu?"bar bar1-active":"bar"}></span>
+                        <span class={this.state.openBurgerMenu?"bar bar2-active":"bar"}></span>
+                        <span class={this.state.openBurgerMenu?"bar bar3-active":"bar"}></span>
+                    </div>
+                </div>
                 <div className="content-wrapper">
                     <div className="count">Welcome {this.state.name},</div>
-                    {/* <div className="count">You have {(todos.filter(todo=>!todo.complete).length===0)?"no":todos.filter(todo=>!todo.complete).length} todos left.</div> */}
+                     {/* <div className="count">You have {(todos.filter(todo=>!todo.complete).length===0)?"no":todos.filter(todo=>!todo.complete).length} todos left.</div>  */}
                     <div className="todo-wrapper">
                         {/* <div className="todo-view">{this.state.todosToShow}</div> */}
                         <div className="todo-view">{this.state.view}</div>
                         <div className="todo-container">
                             {(!empty)?
                             ((!(this.state.view==="This Week"))?
-                            todos.map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} todo={todo}></Todo>)):
+                            todos.map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} isOverdue={this.isOverdue} todo={todo}></Todo>)):
                             (
-                                <div className="week-view">
-                                    {days.map(day=>
-                                    (<div className="week-day-view">
-                                        <span className="week-day-title">{day}</span>
-                                        {/* <hr size="1px" width="90%" color="black"></hr> */}
-                                        {todos.filter(todo=>day===days[todo.datetime.getDay()]).length?todos.filter(todo=>day===days[todo.datetime.getDay()]).map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} todo={todo}></Todo>)):<span className="empty-weekday">You're free this day.</span>}
-                                    </div>))}
-                                </div>
-                                )):
-                                ((this.state.server_inactive)?
-                                (<div>Could not connect to the server. Try refreshing.</div>):
-                                (<div>Nothing to see here.</div>))}
-                        </div>
-                        {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null}
-                        <div className="sort-buttons">
-                            <span>View: </span>
-                            <button className="button view-btn" style={{backgroundColor:this.state.view==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateView("All")}>All</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateView("Today")}>Today</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateView("This Week")}>This Week</button>
-                        </div>
-                        <div className="sort-buttons">
-                            <span>See: </span>
-                            <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateTodosToShow("All")}>All</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Active"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateTodosToShow("Active")}>Active</button>
-                            <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Complete"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button>
-                        </div>
-                        <div className="function-btns">
-                            {/* <button className="button function-btn" onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button> */}
-                            <button className="function-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
-                            <div className="adder">
-                                {/* <span className="material-icons-outlined adder-text">add_circle</span> */}
-                                <TodoForm onSubmit={this.addTodo}></TodoForm>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                 <div className="week-view"> 
+                                     {days.map(day=> 
+                                     (<div className="week-day-view"> 
+                                         <span className="week-day-title">{day}</span> 
+                                         {/* <hr size="1px" width="90%" color="black"></hr>  */}
+                                         {todos.filter(todo=>day===days[todo.datetime.getDay()]).length?todos.filter(todo=>day===days[todo.datetime.getDay()]).map(todo => (<Todo key={todo.id} toggleComplete={()=> this.toggleComplete(todo)} onDelete={()=>this.onDelete(todo)} isToday={this.isToday} isTomorrow={this.isTomorrow} isOverdue={this.isOverdue} todo={todo}></Todo>)):<span className="empty-weekday">You're free this day.</span>} 
+                                     </div>))} 
+                                 </div> 
+                                 )): 
+                                 ((this.state.server_inactive)? 
+                                 (<div>Could not connect to the server. Try refreshing.</div>): 
+                                 (<div>Nothing to see here.</div>))} 
+                         </div> 
+                         {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null} 
+                         <div className="controls"> 
+                             <div className="sort-buttons"> 
+                                 <span>View: </span> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.view==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateView("All")}>All</button> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateView("Today")}>Today</button> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateView("This Week")}>This Week</button> 
+                             </div> 
+                             <div className="sort-buttons"> 
+                                 <span>See: </span> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateTodosToShow("All")}>All</button> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Active"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateTodosToShow("Active")}>Active</button> 
+                                 <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Complete"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button> 
+                             </div> 
+                             <div className="function-btns"> 
+                                 {/* <button className="button function-btn" onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>  */}
+                                 {/* <button className="function-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button> */}
+                                 <div className="adder"> 
+                                     {/* <span className="material-icons-outlined adder-text">add_circle</span>  */}
+                                     <howTo></howTo>
+                                     <TodoForm onSubmit={this.addTodo}></TodoForm> 
+                                 </div> 
+                             </div> 
+                         </div> 
+                     </div> 
+                 </div> 
             </div>
             );
     }

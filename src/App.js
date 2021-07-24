@@ -5,6 +5,7 @@ import { HomePage } from './components/homePage';
 import {BrowserRouter as Router, Redirect, Route, Switch, useHistory} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import {useAuth} from "./auth/index.js";
+import howTo from './components/howTo';
 
 export default function App() {
   // Change to FALSE PLEASE

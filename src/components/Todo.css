@@ -20,13 +20,28 @@
   background-color: rgba(0, 0, 0, 0.05);
   margin-top: 10px;
 }
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
 .content-title {
+  display: flex;
   color: white;
   margin-top: 10px;
-  align-self: flex-start;
+  justify-self: flex-start;
   font-size: 4vh;
   font-weight: 500;
   margin-left: 1vw;
+}
+.logout-btn {
+  margin-right: 1vw;
+  margin-top: 10px;
+  font-size: 2vh;
+  font-weight: 400;
+  color: white;
+  background-color: transparent;
+  border: none;
 }
 .count {
   align-self: flex-start;
@@ -63,7 +78,7 @@
 
 .todo-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -86,23 +101,24 @@
   flex-wrap: wrap;
   /* margin-left: 12px; */
   align-items: baseline;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 15px;
   /* margin-top: 15px; */
 }
 
 .week-day-view {
   display: flex;
-  max-width: 14%;
-  min-height: 75px;
-  flex-grow: 1;
+  width: 33%;
+  min-height: 105px;
+  /* flex-grow: 1; */
   align-items: flex-start;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 }
 
 .week-day-title {
-  font-size: 17px;
-  font-weight: 460;
+  font-size: 1.3em;
+  font-weight: 500;
 }
 
 .empty-weekday {
@@ -278,6 +294,15 @@
     flex-direction: column;
     flex-wrap: unset;
   }
+  .week-day-view {
+    min-height: 75px;
+  }
+  .week-view {
+    padding-left: unset;
+  }
+  .logout-btn {
+    display: none;
+  }
 }
 @media screen and (max-width: 1380px) {
   .week-view {
@@ -286,9 +311,14 @@
     flex-wrap: unset;
     flex-direction: column;
     align-items: flex-start;
+    padding-left: unset;
   }
   .week-day-view {
-    max-width: unset;
+    max-width: none;
     width: 100%;
+    min-height: 75px;
+  }
+  .todo-container {
+    justify-content: center;
   }
 }
