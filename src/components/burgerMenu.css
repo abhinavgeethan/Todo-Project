@@ -8,7 +8,7 @@
   align-items: center;
   flex-direction: column;
   border-radius: 5px;
-  z-index: 2;
+  z-index: 3;
   transition: 0.3s;
 }
 .burger-inner {
@@ -24,7 +24,7 @@
   margin-right: 1.5vw;
   margin-top: 15px;
   display: none;
-  z-index: 3;
+  z-index: 4;
 }
 .bar {
   display: block;

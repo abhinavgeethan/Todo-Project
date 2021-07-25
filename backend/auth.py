@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required
+# from werkzeug.security import generate_password_hash, check_password_hash
+# from flask_login import login_user, logout_user, login_required
 from .models import Todos, User
-import json
+# import json
 import dateutil
 from . import db,guard
 import flask_praetorian
@@ -33,9 +33,9 @@ def login_post():
     print("LoggedIn")
     return {"loggedIn":True,"name":user.name,"id":user.id,"access_token":guard.encode_jwt_token(user)},200
 
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
+# @auth.route('/signup')
+# def signup():
+#     return render_template('signup.html')
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -45,28 +45,30 @@ def signup_post():
     name = data['name']
     password = data['password']
 
-    user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
+    user = User.query.filter_by(email=email).first()
 
-    if user: # if a user is found, we want to redirect back to signup page so user can try again  
-        # flash('Email address already exists')
-        return "User with same email id already exists."
+    if user:
+        return {"error":"UserExists","message":"User with same email id already exists."},400
+    
+    user = User.query.filter_by(username=username).first()
 
-    # create new user with the form data. Hash the password so plaintext version isn't saved.
+    if user:
+        return {"error":"UserExists","message":"User with same username already exists."},400
+
     password=guard.hash_password(password)
     new_user = User(username=username,email=email, name=name, password=password,roles='user')
 
-    # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
     user = User.query.filter_by(email=email).first()
-    return {"signedup":True,"username":user.username,"name":user.name,"id":user.id} if user else {"signedup":False,"username":None,"name":None}
+    return {"signedup":True,"username":user.username,"name":user.name,"id":user.id} if user else {"signedup":False,"username":None,"name":None},201
 
-@auth.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
+# @auth.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     return redirect(url_for('main.index'))
 
 @auth.route('/refresh',methods=['POST'])
 def refresh():
@@ -93,7 +95,7 @@ def delete_todo():
     todo_id=data['id']
     user_id=data['user_id']
     if cur_user_id!=user_id:
-        return {"error":"User id mismatch"},404
+        return {"error":"User id mismatch"},403
     todo=Todos.query.filter_by(id=todo_id,user_id=user_id).first()
     db.session.delete(todo)
     db.session.commit()
@@ -104,14 +106,13 @@ def delete_todo():
 def add_todo():
     cur_user_id=flask_praetorian.current_user().id
     data=request.get_json()
-    print(data)
     id=data['id']
     user_id=data['user_id']
     text=data['text']
     datetime=dateutil.parser.parse(data['datetime'])
     completed=data['completed']
     if cur_user_id!=user_id:
-        return {"error":"User id mismatch"},404
+        return {"error":"User id mismatch"},403
     todo_check=Todos.query.filter_by(id=id,user_id=user_id).first()
     if todo_check:
         return {"error":"Todo Exists"},404

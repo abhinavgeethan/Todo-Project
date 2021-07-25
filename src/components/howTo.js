@@ -4,7 +4,7 @@ import './ModalStyle.css';
 import './Todo.css';
 
 
-export default class howTo extends React.Component{
+export default class HowTo extends React.Component{
     
     constructor(props){
         super(props);
@@ -28,7 +28,53 @@ export default class howTo extends React.Component{
                                 Just give your todo a good name and use the datepicker to pick when it's due and you're good to go!
                             </p>
                         </li>
+                        <li>
+                            <h3 style={{color:"rgba(var(--palette-2))"}}>Changing Views</h3>
+                            <p>
+                                You can change the view by clicking the arrow next to <b>Today</b> on the top right or hovering over that area.
+                                <br></br>
+                                <br></br>
+                                <b>All</b>: This view shows all your Todos.
+                                <br></br>
+                                <b>Today</b>: This view shows Todos scheduled for today.
+                                <br></br>
+                                <b>This Week</b>: This view shows this week's schedule.
+                            </p>
+                        </li>
+                        <li>
+                            <h3 style={{color:"rgba(var(--palette-2))"}}>Marking as Completed</h3>
+                            <p>
+                                Clicking on any todo will toggle it's active state:
+                                <br></br>
+                                <br></br>
+                                <b style={{color:"rgba(var(--palette-2))"}}>Green</b>: Completed.
+                                <br></br>
+                                <b>White</b>: Upcoming.
+                                <br></br>
+                                <b style={{color:"rgba(var(--palette-3))"}}>Red</b>: Overdue.
+                            </p>
+                        </li>
+                        <li>
+                            <h3 style={{color:"rgba(var(--palette-2))"}}>Filtering</h3>
+                            <p>
+                                You can filter the view by clicking the buttons on the bottom.
+                                <br></br>
+                                <br></br>
+                                <b>All</b>: Shows all your Todos.
+                                <br></br>
+                                <b style={{color:"rgba(var(--palette-3))"}}>Active</b>: Only shows Todos that are yet to be completed.
+                                <br></br>
+                                <b style={{color:"rgba(var(--palette-2))"}}>Completed</b>: Only shows completed Todos.
+                            </p>
+                        </li>
+                        <li>
+                            <h3 style={{color:"rgba(var(--palette-2))"}}>Deleting ToDos</h3>
+                            <p>
+                                You can delete any todo by clicking the <b>X</b> button right next to it. Once you confirm your decision it will be deleted permanently.
+                            </p>
+                        </li>
                     </ol>
+                    <br></br>
                 </div>
             </Modal>
         </div>

@@ -14,8 +14,14 @@ export const SignUpForm=(props)=>{
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // const onOpenModal = () => setOpen(true);
-    const onCloseSignup = () => {setOpenSignup(false);};
-    const onCloseLogin = () => {setOpenLogin(false);};
+    const onCloseSignup = () => {
+      setOpenSignup(false);
+      props.closeSignup();
+    };
+    const onCloseLogin = () => {
+      setOpenLogin(false);
+      props.closeLogin();
+    };
 
     console.log(props);
 
@@ -30,7 +36,20 @@ export const SignUpForm=(props)=>{
           .then(response=>response.json())
           .then(data => {
             console.log(data.signedup);
-            setisUser(data.signedup);
+            if (data.signedup){
+              setisUser(data.signedup);
+              alert("Signed up succesfully!");
+            }else if(data.error){
+              console.error(data.error);
+              console.error(data.message);
+              alert(data.message);
+              setOpenSignup(false);
+              props.closeSignup();
+            }
+          })
+          .catch(error=>{
+            console.error("Server Unreachable");
+            console.error(error);
           });
     }
 
@@ -51,8 +70,16 @@ export const SignUpForm=(props)=>{
               login({"access_token":data.access_token});
               setIsLoggedIn(data.loggedIn);
               props.onLogin(data.loggedIn);
+            }else if(data.error){
+              alert(data.message);
+              props.closeLogin();
+              setOpenLogin(false);
             }
-          });
+          })
+          .catch(error=>{
+            console.error("Server Unreachable");
+            console.error(error);
+          })
     }
 
     const FormSuccess = () => {

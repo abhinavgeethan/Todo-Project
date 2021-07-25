@@ -1,9 +1,10 @@
 import React from "react";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
-import howTo from './howTo';
 import "./burgerMenu.css";
+import "./dropdown.css";
 import {logout,authFetch} from "../auth/index.js";
+import HowTo from "./HowTo";
 
 export default class TodoList extends React.Component{
     
@@ -18,7 +19,8 @@ export default class TodoList extends React.Component{
             name:"User",
             server_inactive:false,
             processing:false,
-            openBurgerMenu:false
+            openBurgerMenu:false,
+            openViewDropdown:false
         };
         this.logoutHandler=(bool_val)=>{
             console.log("Logging Out.");
@@ -155,7 +157,7 @@ export default class TodoList extends React.Component{
             localStorage.setItem('state',JSON.stringify(this.state))
         }
     }
-
+    // Date Stuff
     isOverdue=(datetime)=>{
         let now=new Date();
         return (now>datetime)
@@ -179,7 +181,7 @@ export default class TodoList extends React.Component{
         today.setSeconds(0);
         today.setMinutes(0);
         today.setHours(0);
-        let week_start=new Date(today.getTime()-(dayDuration*(7-datetime.getDay())));
+        let week_start=new Date(today.getTime()-(dayDuration*(today.getDay())));
         let week_end=new Date(week_start.getTime()+(dayDuration*7));
         return ((datetime>week_start)&&(datetime<week_end))
     }
@@ -259,7 +261,20 @@ export default class TodoList extends React.Component{
                      {/* <div className="count">You have {(todos.filter(todo=>!todo.complete).length===0)?"no":todos.filter(todo=>!todo.complete).length} todos left.</div>  */}
                     <div className="todo-wrapper">
                         {/* <div className="todo-view">{this.state.todosToShow}</div> */}
-                        <div className="todo-view">{this.state.view}</div>
+                        <div className="todo-view" onMouseEnter={()=>{this.setState({openViewDropdown:true})}} onMouseLeave={()=>{this.setState({openViewDropdown:false})}}>
+                            <div className="todo-view-status">
+                                <span style={{cursor:"pointer"}} onClick={()=>{this.setState({openViewDropdown:!this.state.openViewDropdown})}}>{this.state.view}</span>
+                                <div class="caret" style={{cursor:"pointer"}} onClick={()=>{this.setState({openViewDropdown:!this.state.openViewDropdown})}}>
+                                    <span className={this.state.openViewDropdown?"caret-bar1 caret-bar1-active":"caret-bar1"}></span>
+                                    <span className={this.state.openViewDropdown?"caret-bar2 caret-bar2-active":"caret-bar2"}></span>
+                                </div>
+                            </div>
+                            <div className={this.state.openViewDropdown?"view-dropdown view-dropdown-active":"view-dropdown"}>
+                                <button className="button view-btn" style={{backgroundColor:this.state.view==="All"?('rgba(var(--palette-1))'):('transparent')}} onClick={()=>this.updateView("All")}>All</button> 
+                                <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-1))'):('transparent')}} onClick={()=>this.updateView("Today")}>Today</button> 
+                                <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-1))'):('transparent')}} onClick={()=>this.updateView("This Week")}>This Week</button>
+                            </div>
+                        </div>
                         <div className="todo-container">
                             {(!empty)?
                             ((!(this.state.view==="This Week"))?
@@ -280,14 +295,14 @@ export default class TodoList extends React.Component{
                          </div> 
                          {(this.state.todos.some(todo=> todo.complete)&&this.state.todosToShow!=="Active")?<button className="button" onClick={this.deleteCompleted}>Remove Completed</button>:null} 
                          <div className="controls"> 
-                             <div className="sort-buttons"> 
+                             {/* <div className="sort-buttons"> 
                                  <span>View: </span> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.view==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateView("All")}>All</button> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.view==="Today"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateView("Today")}>Today</button> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.view==="This Week"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateView("This Week")}>This Week</button> 
-                             </div> 
+                             </div>  */}
                              <div className="sort-buttons"> 
-                                 <span>See: </span> 
+                                 <span style={{paddingRight:"5px"}}>Filter by:</span> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="All"?('rgba(var(--palette-1))'):('rgba(var(--palette-1),0.7)')}} onClick={()=>this.updateTodosToShow("All")}>All</button> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Active"?('rgba(var(--palette-3))'):('rgba(var(--palette-3),0.7)')}} onClick={()=>this.updateTodosToShow("Active")}>Active</button> 
                                  <button className="button view-btn" style={{backgroundColor:this.state.todosToShow==="Complete"?('rgba(var(--palette-2))'):('rgba(var(--palette-2),0.7)')}} onClick={()=>this.updateTodosToShow("Complete")}>Completed</button> 
@@ -295,9 +310,9 @@ export default class TodoList extends React.Component{
                              <div className="function-btns"> 
                                  {/* <button className="button function-btn" onClick={()=>{for (let i=0;i<2;i++) {this.autoSave();}}}>Save Progress</button>  */}
                                  {/* <button className="function-btn" onClick={()=>{this.logoutHandler(true)}}>Log Out</button> */}
+                                 <HowTo></HowTo>
                                  <div className="adder"> 
                                      {/* <span className="material-icons-outlined adder-text">add_circle</span>  */}
-                                     <howTo></howTo>
                                      <TodoForm onSubmit={this.addTodo}></TodoForm> 
                                  </div> 
                              </div> 

@@ -1,0 +1,54 @@
+.caret {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.caret-bar1 {
+  display: block;
+  width: 10px;
+  height: 3px;
+  /* margin: 5px auto; */
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background-color: #000000aa;
+  transform: rotate(45deg);
+}
+.caret-bar2 {
+  display: block;
+  width: 10px;
+  height: 3px;
+  /* margin: 5px auto; */
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background-color: #000000aa;
+  transform: rotate(-45deg) translateX(-3px) translateY(-3px);
+}
+.view-dropdown {
+  position: relative;
+  display: flex;
+  visibility: collapse;
+  align-self: flex-start;
+  flex-direction: column;
+  background-color: rgba(var(--palette-1), 0.6);
+  border-radius: 5px;
+  margin-top: 3px;
+  width: 100%;
+  z-index: 1;
+  top: -50%;
+  transform: scale(0);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.view-dropdown-active {
+  visibility: visible;
+  transform: scale(1) translateY(80%);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.caret-bar1-active {
+  transform: rotate(-45deg);
+}
+.caret-bar2-active {
+  transform: rotate(45deg) translateX(-3px) translateY(3px);
+}
