@@ -10,9 +10,9 @@ export const HomePage=(props)=>{
     const [openSignup,setOpenSignup]=useState(false);
     const onOpenSignup = () => {
         setOpenSignup(true);
-        console.log("Done");
+        // console.log("Done");
     };
-    console.log(props);
+    // console.log(props);
     const onLogIn = (login) => {
         if (login){
             props.loginHandler(login);
@@ -22,7 +22,7 @@ export const HomePage=(props)=>{
         // console.log(isLoggedIn);
       }
     if (props.auth[0]){
-        console.log(props.auth[0]);
+        // console.log(props.auth[0]);
         return(<Redirect to="/app"></Redirect>);
     }else{
         return(
