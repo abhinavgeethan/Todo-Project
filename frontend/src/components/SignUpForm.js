@@ -32,7 +32,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password,"email":values.email,"name":values.name})
       };
-      fetch('http://127.0.0.1:5000/signup', requestOptions)
+      fetch('https://todo-project-webapp.herokuapp.com/signup', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.signedup);
@@ -61,7 +61,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password})
       };
-      fetch('http://127.0.0.1:5000/login', requestOptions)
+      fetch('https://todo-project-webapp.herokuapp.com/login', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.loggedIn);

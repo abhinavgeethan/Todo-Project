@@ -33,7 +33,7 @@ export default class TodoList extends React.Component{
 
     componentDidMount(){
         console.log("Mounted");
-        authFetch("http://127.0.0.1:5000/data/fetch")
+        authFetch("https://todo-project-webapp.herokuapp.com/data/fetch")
             .then(r=>r.json())
             .then(data=>{
                 if (data.data){
@@ -66,7 +66,7 @@ export default class TodoList extends React.Component{
             body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id,"text":todo.text,"datetime":todo.datetime,"completed":todo.complete})
         };
         let new_todo={}
-        authFetch("http://127.0.0.1:5000/data/add",requestOptions)
+        authFetch("https://todo-project-webapp.herokuapp.com/data/add",requestOptions)
             .then(r=>r.json())
             .then(data=>{
                 if (data.added){
@@ -88,7 +88,7 @@ export default class TodoList extends React.Component{
             body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id,"completed":(!todo.completed)})
         };
         this.setState({processing:true});
-        authFetch("http://127.0.0.1:5000/data/update",requestOptions)
+        authFetch("https://todo-project-webapp.herokuapp.com/data/update",requestOptions)
             .then(r=>r.json())
             .then(data=>{
                 console.log("Todo Updated");
@@ -131,7 +131,7 @@ export default class TodoList extends React.Component{
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id})
             };
-            authFetch("http://127.0.0.1:5000/data/delete",requestOptions)
+            authFetch("https://todo-project-webapp.herokuapp.com/data/delete",requestOptions)
                 .then(r=>r.json())
                 .then(data=>{
                     if (data.deleted){
