@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import "./homePage.css";
 import {SignUpForm} from './SignUpForm';
 import { Redirect } from "react-router-dom";
+import GHLogo from "../GitHub-Mark-120px-plus.png";
 
 export const HomePage=(props)=>{
     const [openLogin,setOpenLogin]=useState(false);
@@ -38,12 +39,15 @@ export const HomePage=(props)=>{
                         <button className="main-button"onClick={onOpenLogin}>Log In</button>
                         <button className="main-button"onClick={onOpenSignup}>Sign Up</button>
                     </div>
-                    <div className="link-buttons">
-                        <button>Github</button>
-                        <button>Netlify</button>
-                    </div>
+                    {/* <div className="link-buttons"> */}
+                        {/* <button style={{display:"flex",alignItems:"center",justifyContent:"center",border:"none",fontSize:"1vw", color:"#00000099",backgroundColor:"transparent",cursor:"pointer"}}onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}> */}
+                            {/* <img src={GHLogo} width="10%"></img> */}
+                            {/* <span>GitHub Repository</span> */}
+                        {/* </button> */}
+                        {/* <button>Netlify</button> */}
+                    {/* </div> */}
                 </div>
-                {(openLogin||openSignup)?(<SignUpForm openSignup={openSignup} openLogin={openLogin} onLogin={onLogIn}></SignUpForm>):null}
+                {(openLogin||openSignup)?(<SignUpForm openSignup={openSignup} openLogin={openLogin} closeLogin={()=>{setOpenLogin(false)}} closeSignup={()=>{setOpenSignup(false)}} onLogin={onLogIn}></SignUpForm>):null}
             </div>
         );
     }
