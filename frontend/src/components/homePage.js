@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import "./homePage.css";
 import {SignUpForm} from './SignUpForm';
 import { Redirect } from "react-router-dom";
-import GHLogo from "../GitHub-Mark-120px-plus.png";
+// import GHLogo from "../GitHub-Mark-120px-plus.png";
 
 export const HomePage=(props)=>{
     const [openLogin,setOpenLogin]=useState(false);

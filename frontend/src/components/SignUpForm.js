@@ -3,7 +3,7 @@ import Modal from "react-responsive-modal";
 import validate from "./ValidateInfo";
 import './ModalStyle.css';
 import './SignUpForm.css';
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 import {login} from "../auth";
 
 export const SignUpForm=(props)=>{

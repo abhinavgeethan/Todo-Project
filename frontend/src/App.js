@@ -1,8 +1,8 @@
 import './App.css';
 import TodoList from './components/TodoList';
-import React, {useState,useEffect} from "react";
+import React, {useState} from "react";
 import { HomePage } from './components/homePage';
-import {BrowserRouter as Router, Redirect, Route, Switch, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import {useAuth} from "./auth/index.js";
 

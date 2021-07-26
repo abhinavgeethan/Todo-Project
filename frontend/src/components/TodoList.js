@@ -228,7 +228,7 @@ export default class TodoList extends React.Component{
             }
         }
         else{
-            todos=todos;
+            // todos=todos;
             if (todos.length === 0){
                 empty=true
             }
