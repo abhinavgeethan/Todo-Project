@@ -69,6 +69,7 @@ export const SignUpForm=(props)=>{
             if (data.loggedIn && data.access_token){
               login({"access_token":data.access_token});
               setIsLoggedIn(data.loggedIn);
+              console.log(isLoggedIn);
               props.onLogin(data.loggedIn);
             }else if(data.error){
               alert(data.message);
@@ -123,7 +124,7 @@ export const SignUpForm=(props)=>{
             callback(values);
           }
         },
-        [errors]
+        [errors,isSubmitting,values,callback]
       );
     
       return { handleChange, handleSubmit, values, errors };
@@ -149,7 +150,7 @@ export const SignUpForm=(props)=>{
       const handleSubmit = e => {
         e.preventDefault();
         // console.log("prevented default login");
-        // setErrors(validate(values));
+        setErrors({});
         // console.log("Got here?");
         setIsSubmitting(true);
       };
