@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
     app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
     app.config['JWT_ACCESS_LIFESPAN'] = {'hours': 24}
     app.config['JWT_REFRESH_LIFESPAN'] = {'days': 30}
 
