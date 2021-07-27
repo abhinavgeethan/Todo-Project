@@ -5,6 +5,7 @@ import "./burgerMenu.css";
 import "./dropdown.css";
 import {logout,authFetch} from "../auth/index.js";
 import HowTo from "./HowTo";
+import configData from "../config.json";
 
 export default class TodoList extends React.Component{
     
@@ -33,7 +34,7 @@ export default class TodoList extends React.Component{
 
     componentDidMount(){
         console.log("Mounted");
-        authFetch("http://127.0.0.1:5000/data/fetch")
+        authFetch(configData.SERVER_URL+"data/fetch")
             .then(r=>r.json())
             .then(data=>{
                 if (data.data){
@@ -66,7 +67,7 @@ export default class TodoList extends React.Component{
             body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id,"text":todo.text,"datetime":todo.datetime,"completed":todo.complete})
         };
         let new_todo={}
-        authFetch("http://127.0.0.1:5000/data/add",requestOptions)
+        authFetch(configData.SERVER_URL+"data/add",requestOptions)
             .then(r=>r.json())
             .then(data=>{
                 if (data.added){
@@ -88,7 +89,7 @@ export default class TodoList extends React.Component{
             body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id,"completed":(!todo.completed)})
         };
         this.setState({processing:true});
-        authFetch("http://127.0.0.1:5000/data/update",requestOptions)
+        authFetch(configData.SERVER_URL+"data/update",requestOptions)
             .then(r=>r.json())
             .then(data=>{
                 console.log("Todo Updated");
@@ -131,7 +132,7 @@ export default class TodoList extends React.Component{
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({"id": todo.id,"user_id":this.state.user_id})
             };
-            authFetch("http://127.0.0.1:5000/data/delete",requestOptions)
+            authFetch(configData.SERVER_URL+"data/delete",requestOptions)
                 .then(r=>r.json())
                 .then(data=>{
                     if (data.deleted){
@@ -228,7 +229,7 @@ export default class TodoList extends React.Component{
             }
         }
         else{
-            todos=todos;
+            // todos=todos;
             if (todos.length === 0){
                 empty=true
             }
@@ -242,7 +243,7 @@ export default class TodoList extends React.Component{
                     <div class="content-title burger-inner">Todo WebApp</div>
                     <button className="function-btn burger-inner" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
                     <button className="function-btn burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}>GitHub</button>
-                    <a href="githubreadmelink" className="burger-inner">Credits and Resources</a>
+                    <a href="githubreadmelink" className="burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project/blob/main/Resources.md")}}>Credits and Resources</a>
                 </div>
                 <div className="header">
                     <div className="content-title">Todo WebApp</div>

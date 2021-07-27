@@ -18,8 +18,8 @@ export default class HowTo extends React.Component{
         <div>
             <button className="function-btn" onClick={()=>{this.setState({openModal:true})}}>How To Use</button>
             <Modal open={this.state.openModal} onClose={()=>{this.setState({openModal:false})}} center>
-                <div style={{backgroundColor:"black",color:"white"}}>
-                    <h1 style={{color:"rgba(var(--palette-2))"}}>How To Use</h1>
+                <div style={{backgroundColor:"black",color:"white",marginTop:"20px"}}>
+                    <h1 style={{color:"rgba(var(--palette-2))",marginTop:"10px",marginLeft:"10px",marginRight:"10px"}}>How To Use</h1>
                     <ol>
                         <li>
                             <h3 style={{color:"rgba(var(--palette-2))"}}>Adding ToDos</h3>
@@ -47,11 +47,11 @@ export default class HowTo extends React.Component{
                                 Clicking on any todo will toggle it's active state:
                                 <br></br>
                                 <br></br>
-                                <b style={{color:"rgba(var(--palette-2))"}}>Green</b>: Completed.
-                                <br></br>
                                 <b>White</b>: Upcoming.
                                 <br></br>
                                 <b style={{color:"rgba(var(--palette-3))"}}>Red</b>: Overdue.
+                                <br></br>
+                                <b style={{color:"rgba(var(--palette-2))"}}>Green</b>: Completed.
                             </p>
                         </li>
                         <li>

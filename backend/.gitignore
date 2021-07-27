@@ -1,0 +1,9 @@
+#pycache
+*.pyc
+
+#venv
+/auth
+
+#junk
+/templates
+.env

@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import "./homePage.css";
 import {SignUpForm} from './SignUpForm';
 import { Redirect } from "react-router-dom";
-import GHLogo from "../GitHub-Mark-120px-plus.png";
+// import GHLogo from "../GitHub-Mark-120px-plus.png";
 
 export const HomePage=(props)=>{
     const [openLogin,setOpenLogin]=useState(false);
@@ -10,9 +10,9 @@ export const HomePage=(props)=>{
     const [openSignup,setOpenSignup]=useState(false);
     const onOpenSignup = () => {
         setOpenSignup(true);
-        console.log("Done");
+        // console.log("Done");
     };
-    console.log(props);
+    // console.log(props);
     const onLogIn = (login) => {
         if (login){
             props.loginHandler(login);
@@ -22,7 +22,7 @@ export const HomePage=(props)=>{
         // console.log(isLoggedIn);
       }
     if (props.auth[0]){
-        console.log(props.auth[0]);
+        // console.log(props.auth[0]);
         return(<Redirect to="/app"></Redirect>);
     }else{
         return(

@@ -3,8 +3,9 @@ import Modal from "react-responsive-modal";
 import validate from "./ValidateInfo";
 import './ModalStyle.css';
 import './SignUpForm.css';
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 import {login} from "../auth";
+import configData from "../config.json";
 
 export const SignUpForm=(props)=>{
     const [openLogin, setOpenLogin] = useState(props.openLogin);
@@ -32,7 +33,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password,"email":values.email,"name":values.name})
       };
-      fetch('http://127.0.0.1:5000/signup', requestOptions)
+      fetch(configData.SERVER_URL+'signup', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.signedup);
@@ -61,7 +62,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password})
       };
-      fetch('http://127.0.0.1:5000/login', requestOptions)
+      fetch(configData.SERVER_URL+'login', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.loggedIn);
@@ -69,6 +70,7 @@ export const SignUpForm=(props)=>{
             if (data.loggedIn && data.access_token){
               login({"access_token":data.access_token});
               setIsLoggedIn(data.loggedIn);
+              console.log(isLoggedIn);
               props.onLogin(data.loggedIn);
             }else if(data.error){
               alert(data.message);
@@ -123,7 +125,7 @@ export const SignUpForm=(props)=>{
             callback(values);
           }
         },
-        [errors]
+        [errors,isSubmitting,values,callback]
       );
     
       return { handleChange, handleSubmit, values, errors };
@@ -149,7 +151,7 @@ export const SignUpForm=(props)=>{
       const handleSubmit = e => {
         e.preventDefault();
         // console.log("prevented default login");
-        // setErrors(validate(values));
+        setErrors({});
         // console.log("Got here?");
         setIsSubmitting(true);
       };

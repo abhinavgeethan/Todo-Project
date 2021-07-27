@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import flask_praetorian
+import os
 
 db = SQLAlchemy()
 guard=flask_praetorian.Praetorian()
@@ -11,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
     app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
     app.config['JWT_ACCESS_LIFESPAN'] = {'hours': 24}
     app.config['JWT_REFRESH_LIFESPAN'] = {'days': 30}
 
