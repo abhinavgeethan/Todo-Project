@@ -243,7 +243,7 @@ export default class TodoList extends React.Component{
                     <div class="content-title burger-inner">Todo WebApp</div>
                     <button className="function-btn burger-inner" onClick={()=>{this.logoutHandler(true)}}>Log Out</button>
                     <button className="function-btn burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project")}}>GitHub</button>
-                    <a href="githubreadmelink" className="burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project/blob/main/Resources.md")}}>Credits and Resources</a>
+                    <a className="burger-inner" onClick={()=>{window.open("https://github.com/abhinavgeethan/Todo-Project/blob/main/Resources.md")}}>Credits and Resources</a>
                 </div>
                 <div className="header">
                     <div className="content-title">Todo WebApp</div>
