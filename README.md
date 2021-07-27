@@ -17,6 +17,8 @@ A web application that can keep track of your tasks and when its due. Created as
 
 ## Running Locally
 
+Assuming that you have Node and Python installed, follow the following steps:
+
 1. ### Clone the repository:
 
    To clone the repository via command line type:
@@ -27,14 +29,18 @@ A web application that can keep track of your tasks and when its due. Created as
 
 2. ### Running Frontend:
 
-   Navigate to the `frontend` directory and run:
+   - **Installing dependencies**: Navigate to the `frontend` directory and run:
+     ```bash
+     npm install
+     ```
+   - **Starting up**: Navigate to the `frontend` directory and run:
 
-   ```bash
-   npm start
-   ```
+     ```bash
+     npm start
+     ```
 
 3. ### Running Backend:
-   - **Installing prerequisites**: From the `todo-project` directory, run:
+   - **Installing dependencies**: From the `todo-project` directory, run:
      ```bash
      pip install requirements.txt
      ```
