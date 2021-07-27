@@ -5,6 +5,7 @@ import './ModalStyle.css';
 import './SignUpForm.css';
 // import { Redirect } from "react-router-dom";
 import {login} from "../auth";
+import configData from "../config.json";
 
 export const SignUpForm=(props)=>{
     const [openLogin, setOpenLogin] = useState(props.openLogin);
@@ -32,7 +33,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password,"email":values.email,"name":values.name})
       };
-      fetch('https://todo-project-webapp.herokuapp.com/signup', requestOptions)
+      fetch(configData.SERVER_URL+'signup', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.signedup);
@@ -61,7 +62,7 @@ export const SignUpForm=(props)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({"username": values.username,"password":values.password})
       };
-      fetch('https://todo-project-webapp.herokuapp.com/login', requestOptions)
+      fetch(configData.SERVER_URL+'login', requestOptions)
           .then(response=>response.json())
           .then(data => {
             console.log(data.loggedIn);
