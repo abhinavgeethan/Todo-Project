@@ -1,8 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-# from werkzeug.security import generate_password_hash, check_password_hash
-# from flask_login import login_user, logout_user, login_required
+from flask import Blueprint, render_template,request
 from .models import Todos, User
-# import json
 import dateutil
 from . import db,guard
 import flask_praetorian
@@ -18,24 +15,14 @@ def login_post():
     data=request.get_json()
     username = data['username']
     password = data['password']
-    remember = True if request.form.get('remember') else False
 
     #user = User.query.filter_by(username=username).first()
 
-    # check if user actually exists
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    #if not user or not check_password_hash(user.password, password): 
-        # flash('Please check your login details and try again.')
-        #return {"loggedIn":False,"name":None,"id":None} # if user doesn't exist or password is wrong, reload the page
+    # flash('Please check your login details and try again.')
 
-    # if the above check passes, then we know the user has the right credentials
     user=guard.authenticate(username, password)
     print("LoggedIn")
     return {"loggedIn":True,"name":user.name,"id":user.id,"access_token":guard.encode_jwt_token(user)},200
-
-# @auth.route('/signup')
-# def signup():
-#     return render_template('signup.html')
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -63,12 +50,6 @@ def signup_post():
 
     user = User.query.filter_by(email=email).first()
     return {"signedup":True,"username":user.username,"name":user.name,"id":user.id} if user else {"signedup":False,"username":None,"name":None},201
-
-# @auth.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect(url_for('main.index'))
 
 @auth.route('/refresh',methods=['POST'])
 def refresh():
