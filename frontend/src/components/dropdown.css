@@ -42,7 +42,7 @@
 }
 .view-dropdown-active {
   visibility: visible;
-  transform: scale(1) translateY(80%);
+  transform: scale(1);
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
